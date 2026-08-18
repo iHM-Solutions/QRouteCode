@@ -1,0 +1,17 @@
+[general]
+name=QRouteCode
+version=1.0.0
+description=Converts vector lines and polylines into scannable Google Maps routing QR codes for mobile navigation.
+about=This plugin automatically extracts the explicit coordinate vertices of a selected polyline layer, shifts them to WGS 84, and encodes them directly into an URL-safe Google Maps Directions API schema. The routing coordinates are dynamically translated into a high-density, dark blue QR code preview frame inside QGIS. External dependency: Contains an embedded 'qrcode' source vendor library.
+qgisMinimumVersion=4.0
+qgisMaximumVersion=4.99
+author=JuanMa Romero MArtin - iHM Solutions
+email=dev@ihm.solutions
+repository=https://github.com/iHM-Solutions
+tracker=https://github.com/iHM-Solutions
+homepage=https://ihm.solutions
+category=Plugins
+icon=icon.png
+tags=polyline,qr code,google maps,routing,itinerary,navigation
+experimental=False
+deprecated=False
