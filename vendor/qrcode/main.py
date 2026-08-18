@@ -94,8 +94,8 @@ class QRCode(Generic[GenericImage]):
         self.border = int(border)
         self.mask_pattern = mask_pattern
         self.image_factory = image_factory
-        if image_factory is not None:
-            assert issubclass(image_factory, BaseImage)
+        if not issubclass(image_factory, BaseImage):
+            raise TypeError("image_factory must be a subclass of BaseImage")
         self.clear()
 
     @property
@@ -357,7 +357,8 @@ class QRCode(Generic[GenericImage]):
             self.make()
 
         if image_factory is not None:
-            assert issubclass(image_factory, BaseImage)
+            if not issubclass(image_factory, BaseImage):
+                raise TypeError("image_factory must be a subclass of BaseImage")
         else:
             image_factory = self.image_factory
             if image_factory is None:

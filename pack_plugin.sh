@@ -43,6 +43,7 @@ zip -r "$PROJECT_DIR/releases/$ZIP_NAME" "$FOLDER_NAME" \
     -x "*/.git*" \
     -x "*/__pycache__*" \
     -x "*/test*" \
+    -x "*/tests*" \
     -x "*/releases*" \
     -x "$FOLDER_NAME/*.sh" \
     -x "$FOLDER_NAME/*.OLD"
