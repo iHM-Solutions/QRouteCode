@@ -4,7 +4,20 @@
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARENT_DIR="$(dirname "$PROJECT_DIR")"
 FOLDER_NAME="$(basename "$PROJECT_DIR")"
-ZIP_NAME="${FOLDER_NAME}_v1.0.0.zip"
+
+# NEW: Read the version variable string straight from the local metadata layout file
+METADATA_FILE="$PROJECT_DIR/metadata.txt"
+
+if [ -f "$METADATA_FILE" ]; then
+    # Extracts the string right after 'version=' and strips out hidden Windows carriage returns (\r)
+    APP_VERSION=$(grep -E '^version\s*=' "$METADATA_FILE" | cut -d'=' -f2 | sed 's/[[:space:]]//g' | tr -d '\r')
+else
+    APP_VERSION="1.0.0" # Fallback safety checkpoint parameter
+fi
+
+# Dynamically compiled structural asset target name
+ZIP_NAME="${FOLDER_NAME}_v${APP_VERSION}.zip"
+
 
 echo "========================================="
 echo "📦 QRouteCode Deployment Packager"
@@ -36,5 +49,5 @@ zip -r "$PROJECT_DIR/releases/$ZIP_NAME" "$FOLDER_NAME" \
 
 echo "========================================="
 echo "✅ SUCCESS: Build package compiled safely!"
-echo "File location: $PROJECT_DIR/$ZIP_NAME"
+echo "File location: $PROJECT_DIR/releases/$ZIP_NAME"
 echo "========================================="
