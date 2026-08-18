@@ -15,22 +15,25 @@ Scanning the generated QR code directly triggers the native Google Maps app on i
 * **True Vertex Extraction:** Bypasses dense line geometries to capture only the exact structural vertices/nodes plotted on your canvas.
 * **Precise URL Encoding:** Uses strict cross-platform query string mapping to prevent coordinate string truncation or broken routes on mobile devices.
 * **Smart Downsampling:** Automatically handles lines with complex vertex loops, clipping routes down gracefully to match Google Maps API threshold limits (maximum of 22 waypoints).
-* **Modern User Interface:** Built natively with PyQt6 for QGIS 4, featuring an interactive layout with a collapsible text window and an optimized high-resolution dark blue preview matrix frame.
+* **Native Painter Engine:** Rendered completely via `QPainter` and `QPixmap` vectors to remove bulky external library packages, avoiding cross-platform operating system crashes entirely.
+* **Clean User Interface:** Features interactive inputs displaying layer data, active selection diagnostics, and a responsive collapsible code debug panel.
 
 ---
 
 ## How It Works (The Engine)
 
-Unlike standard web browser slashes, mobile devices require a strictly structured parameter schema to parse multi-point paths. The plugin takes your active vector geometry, transforms the spatial nodes to **WGS 84 (EPSG:4326)**, and maps them into an URL-safe query matrix:
+Unlike standard web browser slashes, mobile device systems require a strictly structured parameter schema to parse multi-point paths. The plugin takes your active vector geometry, transforms the spatial nodes to **WGS 84 (EPSG:4326)**, and maps them into an URL-safe query matrix:
 
 ```python
 params = {
     "api": "1",
     "origin": f"{stops[0]['lat']},{stops[0]['lon']}",
     "destination": f"{stops[-1]['lat']},{stops[-1]['lon']}",
-    "travelmode": "walking",
-    "waypoints": "|".join(f"{stop['lat']},{stop['lon']}" for stop in stops[1:-1]),
+    "travelmode": mode,
 }
+if len(stops) > 2:
+    params["waypoints"] = "|".join(f"{stop['lat']},{stop['lon']}" for stop in stops[1:-1])
+
 url = "https://google.com?" + urlencode(params, safe="|,")
 ```
 
@@ -38,16 +41,26 @@ url = "https://google.com?" + urlencode(params, safe="|,")
 
 ## Installation & Setup
 
-### Manual Local Installation
-1. Download or clone this repository as a `.zip` archive.
-2. Extract the folder into your local QGIS 4 user profiles directory on macOS:
-   ```bash
-   /Users/<your-username>/Library/Application Support/QGIS/QGIS4/profiles/default/python/plugins/
-   ```
-3. Ensure the folder name matches exactly: `QRouteCode`
+### Method 1: Via QGIS Plugin Manager (Recommended)
+Once published globally, you can install the plugin natively without leaving the application environment:
+1. Open QGIS and navigate to the top menu: **Plugins** ➔ **Manage and Install Plugins...**
+2. In the sidebar, select the **All** tab.
+3. Type `QRouteCode` into the top search bar field.
+4. Click on the plugin from the filtered results list and select **Install Plugin**.
 
-### Dependencies
-The plugin carries its own self-contained/vendored Python code dependencies inside its environment stack. There is **no need** to manually run pip installs inside your system interpreter layout.
+### Method 2: Via Local ZIP Archive Deployment
+If you downloaded the packaged production archive bundle directly:
+1. Open QGIS and open the extension manager (**Plugins** ➔ **Manage and Install Plugins...**).
+2. Select the **Install from ZIP** tab on the left sidebar menu.
+3. Click the **Browse (...)** button and select your local **`QRouteCode.zip`** file archive.
+4. Click **Install Plugin** to execute background extraction automatically.
+
+### Method 3: Manual Folder Installation (Developers Only)
+1. Download or clone this repository and compress the root contents as a `.zip` archive.
+2. Extract the folder directory cleanly into your local QGIS 4 user profiles location:
+   * **macOS:** `/Users/<username>/Library/Application Support/QGIS/QGIS4/profiles/default/python/plugins/`
+   * **Windows:** `%APPDATA%\QGIS\QGIS4\profiles\default\python\plugins\`
+3. Ensure your extracted directory folder name matches exactly: `qgisQRCodeItinerary`
 
 ---
 
