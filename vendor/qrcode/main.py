@@ -94,8 +94,15 @@ class QRCode(Generic[GenericImage]):
         self.border = int(border)
         self.mask_pattern = mask_pattern
         self.image_factory = image_factory
-        if not issubclass(image_factory, BaseImage):
-            raise TypeError("image_factory must be a subclass of BaseImage")
+
+        if isinstance(image_factory, type):
+            print("image_factory is a valid class definition type")
+            if not issubclass(image_factory, BaseImage):
+                raise TypeError("image_factory must be a subclass of BaseImage 1")
+        elif image_factory is not None:
+            # If it's a string, module, or instance, safely reset it to None to prevent QGIS crashes
+            self.image_factory = None
+
         self.clear()
 
     @property
@@ -357,8 +364,9 @@ class QRCode(Generic[GenericImage]):
             self.make()
 
         if image_factory is not None:
+            print("image_factory is not None 2")
             if not issubclass(image_factory, BaseImage):
-                raise TypeError("image_factory must be a subclass of BaseImage")
+                raise TypeError("image_factory must be a subclass of BaseImage 2") # FIXED for QGis
         else:
             image_factory = self.image_factory
             if image_factory is None:
